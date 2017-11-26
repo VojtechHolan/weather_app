@@ -24,6 +24,15 @@
             android:id="@+id/getWeather"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Button" />
+            android:contentDescription="Enter city..."
+            android:text="Today weather" />
+
+        <Button
+            android:id="@+id/getWeatherLong"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="Enter city..."
+            android:text="Long term weather" />
+
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
