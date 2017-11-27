@@ -19,7 +19,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".todayWeather" />
-        <activity android:name=".ListOfDays"></activity>
+        <activity android:name=".ListOfDays" />
+        <activity android:name=".myFavorite"></activity>
     </application>
 
 </manifest>

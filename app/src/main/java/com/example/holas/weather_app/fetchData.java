@@ -20,8 +20,10 @@ import java.security.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Holas on 25.11.2017.
@@ -32,6 +34,7 @@ public class fetchData extends AsyncTask<Void, Void, Void>{
     String mesto = "";
     String whichButton = "";
     Context context = null;
+    ArrayList<Pocasi> weatherList = new ArrayList<Pocasi>();
     Pocasi p;
 
 
@@ -73,61 +76,96 @@ public class fetchData extends AsyncTask<Void, Void, Void>{
 
             /*Mesto*/
             JSONObject mestoO  = reader.getJSONObject("city");
-            String mesto = mestoO.get("name").toString();
+            String mesto = mestoO.getString("name");
 
             JSONArray dateArr = reader.getJSONArray("list");
 
-            //Připraveny cyklus
-            //for (int i = 0; i < dateArr.length(); ++i) {
-            //}
             JSONObject day = null;
             if(whichButton =="today"){
                 day = dateArr.getJSONObject(0);
+
+                //Datum
+                String datumStr = day.getString("dt");
+
+                Date date = new Date(Long.parseLong(datumStr)*1000);
+                String formatedDate = new SimpleDateFormat("dd.MM.yyyy").format(date);
+
+
+                //Ikonka
+                JSONArray weatherArr = day.getJSONArray("weather");
+                JSONObject o = weatherArr.getJSONObject(0);
+                String ikonka = o.getString("icon");
+
+                //Popisky
+                String popis = o.getString("main");
+                String popisSmall = o.getString("description");
+
+                //Teplota
+                JSONObject tempO = day.getJSONObject("temp");
+
+                String tempMin = tempO.getString("min");
+                String temp = tempO.getString("day");
+                String tempMax = tempO.getString("max");
+
+                p = new Pocasi(mesto,formatedDate,ikonka, popis,popisSmall, temp, tempMin,tempMax);
+
+                Intent myIntent = new Intent(context, todayWeather.class);
+                myIntent.putExtra("mesto", p.mesto);
+                myIntent.putExtra("datum", p.datum);
+                myIntent.putExtra("ikonka", p.ikonka);
+                myIntent.putExtra("popis", p.popis);
+                myIntent.putExtra("popisSmall", p.popisSmall);
+                myIntent.putExtra("tempMin", p.teplotaMin);
+                myIntent.putExtra("temp", p.teplota);
+                myIntent.putExtra("tempMax", p.teplotaMax);
+                myIntent.putExtra("window","today");
+                context.startActivity(myIntent);
             }
 
-            //Datum
-            String datumStr = day.getString("dt");
+            if(whichButton == "long"){
+                //Připraveny cyklus
+                for (int i = 0; i < dateArr.length(); ++i) {
+                    day = dateArr.getJSONObject(i);
 
-            Date date = new Date(Long.parseLong(datumStr)*1000);
-            String formatedDate = new SimpleDateFormat("dd.MM.yyyy").format(date);
+                    //Datum
+                    String datumStr = day.getString("dt");
 
-
-            //Ikonka
-            JSONArray weatherArr = day.getJSONArray("weather");
-            JSONObject o = weatherArr.getJSONObject(0);
-            String ikonka = o.getString("icon");
-
-            //Popisky
-            String popis = o.getString("main");
-            String popisSmall = o.getString("description");
-
-            /*//Teplota
-            JSONArray tempArr = day.getJSONArray("temp");
-            JSONObject oo = tempArr.getJSONObject(0);
-
-            String tempMin = oo.getString("min");
-            String temp = oo.getString("day");
-            String tempMax = oo.getString("max");*/
+                    Date date = new Date(Long.parseLong(datumStr)*1000);
+                    String formatedDate = new SimpleDateFormat("dd.MM.yyyy").format(date);
 
 
-            p = new Pocasi(mesto,formatedDate,ikonka, popis,popisSmall/*, temp, tempMin,tempMax*/);
+                    //Ikonka
+                    JSONArray weatherArr = day.getJSONArray("weather");
+                    JSONObject o = weatherArr.getJSONObject(0);
+                    String ikonka = o.getString("icon");
+
+                    //Teplota
+                    JSONObject tempO = day.getJSONObject("temp");
+
+                    String tempMin = tempO.getString("min");
+                    String temp = tempO.getString("day");
+                    String tempMax = tempO.getString("max");
+
+                    //Popisky
+                    String popis = o.getString("main");
+                    String popisSmall = o.getString("description");
+
+                    p = new Pocasi(mesto,formatedDate,ikonka, popis,popisSmall, temp, tempMin,tempMax);
+
+                    weatherList.add(p);
+                }
+
+
+                Intent myIntent = new Intent(context,ListOfDays.class);
+                myIntent.putExtra("weatherList", weatherList);
+                context.startActivity(myIntent);
+
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        if(whichButton == "today"){
-            Intent myIntent = new Intent(context, todayWeather.class);
-            myIntent.putExtra("mesto", p.mesto);
-            myIntent.putExtra("datum", p.datum);
-            myIntent.putExtra("ikonka", p.ikonka);
-            myIntent.putExtra("popis", p.popis);
-            myIntent.putExtra("popisSmall", p.popisSmall);
-            /*myIntent.putExtra("tempMin", p.teplotaMin);
-            myIntent.putExtra("temp", p.teplota);
-            myIntent.putExtra("tempMax", p.teplotaMax);*/
-            context.startActivity(myIntent);
-        }
         //Toast.makeText(context,p.teplota ,Toast.LENGTH_LONG).show();
 
 

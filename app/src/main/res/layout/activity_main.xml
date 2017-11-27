@@ -8,31 +8,50 @@
     tools:context="com.example.holas.weather_app.MainActivity">
 
 
-    <LinearLayout
+    <Button
+        android:id="@+id/getWeatherLong"
+        style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:contentDescription="Enter city..."
+        android:text="Long term weather"
+        app:layout_constraintTop_toBottomOf="@+id/getWeather"
+        tools:layout_editor_absoluteX="33dp" />
 
-        <EditText
-            android:id="@+id/city"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/favorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:clickable="true"
+        android:src="@android:drawable/btn_star_big_on"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/getWeatherLong"
+        app:layout_constraintVertical_bias="0.501" />
 
-        <Button
-            android:id="@+id/getWeather"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:contentDescription="Enter city..."
-            android:text="Today weather" />
+    <EditText
+        android:id="@+id/city"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/getWeatherLong"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:contentDescription="Enter city..."
-            android:text="Long term weather" />
+    <Button
+        android:id="@+id/getWeather"
+        style="@android:style/Widget.Material.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:contentDescription="Enter city..."
+        android:text="Today weather"
+        app:layout_constraintTop_toBottomOf="@+id/city"
+        tools:layout_editor_absoluteX="0dp" />
 
-    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

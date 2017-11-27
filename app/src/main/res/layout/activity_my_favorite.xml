@@ -4,24 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.holas.weather_app.ListOfDays">
+    tools:context="com.example.holas.weather_app.myFavorite">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/mesto"
+        <EditText
+            android:id="@+id/editText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textAlignment="center"
-            android:textSize="30sp" />
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Name" />
 
-        <ListView
-            android:id="@+id/listPocasi"
+        <Button
+            android:id="@+id/button"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:text="Button" />
     </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>

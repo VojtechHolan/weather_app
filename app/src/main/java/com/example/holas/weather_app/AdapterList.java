@@ -1,65 +1,67 @@
 package com.example.holas.weather_app;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.widget.EditText;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class todayWeather extends AppCompatActivity {
+import java.util.List;
 
-    TextView mestoI, datumI,popisI,popisSmallI,tempI, tempMinI, tempMaxI;
-    ImageView ikonkaI, ikonkaTemp;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_today_weather);
+/**
+ * Created by Holas on 27.11.2017.
+ */
 
-        mestoI = (TextView) findViewById(R.id.mesto);
-        datumI = (TextView) findViewById(R.id.datum);
-        ikonkaI = (ImageView) findViewById(R.id.ikonka);
-        popisI = (TextView) findViewById(R.id.popis);
-        popisSmallI = (TextView) findViewById(R.id.popisSmall);
-        ikonkaTemp = (ImageView) findViewById(R.id.ikonkaTemp);
-        tempI = (TextView) findViewById(R.id.temp);
-        tempMinI = (TextView) findViewById(R.id.tempMin);
-        tempMaxI = (TextView) findViewById(R.id.tempMax);
+public class AdapterList extends ArrayAdapter<Pocasi> {
 
-        String mesto;
-        String datum;
-        String ikonka;
-        String popis;
-        String popisSmall;
-        String temp;
-        String tempMin;
-        String tempMax;
+        Context context;
+        int layoutResourceId;
+        List<Pocasi> data;
 
+        public AdapterList(Context context, int resource, List<Pocasi> objects) {
+            super(context, resource, objects);
+            this.layoutResourceId = resource;
+            this.context = context;
+            this.data = objects;
+        }
 
-        Intent intent = getIntent();
-        String window = intent.getStringExtra("window");
-        mesto = intent.getStringExtra("mesto");
-        datum = intent.getStringExtra("datum");
-        ikonka = intent.getStringExtra("ikonka");
-        popis = intent.getStringExtra("popis");
-        popisSmall = intent.getStringExtra("popisSmall");
-        temp = intent.getStringExtra("temp");
-        tempMin = intent.getStringExtra("tempMin");
-        tempMax = intent.getStringExtra("tempMax");
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View row = convertView;
+            EntryHolder item = null;
 
-        mestoI.setText(mesto);
-        datumI.setText(datum);
-        vyberIkonky(ikonka,ikonkaI);
-        popisI.setText(popis);
-        popisSmallI.setText(popisSmall);
-        ikonkaTemp.setImageResource(R.drawable.temp);
-        tempI.setText(prevodNaC(temp));
-        tempMinI.setText(prevodNaC(tempMin));
-        tempMaxI.setText(prevodNaC(tempMax));
+            if(row == null)
+            {
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+                row = inflater.inflate(layoutResourceId, parent, false);
 
+                item = new EntryHolder();
+                item.datumList = (TextView) row.findViewById(R.id.datumList);
+                item.teplotaList = (TextView) row.findViewById(R.id.teplotaList);
+                item.ikonkaList = (ImageView) row.findViewById(R.id.ikonkaList);
 
+                row.setTag(item);
+            }
+            else
+            {
+                item = (EntryHolder)row.getTag();
+            }
 
-    }
+            Pocasi entry = data.get(position);
+            item.datumList.setText(entry.datum);
+            item.teplotaList.setText(prevodNaC(entry.teplota));
+            vyberIkonky(entry.ikonka,item.ikonkaList );
+
+            return row;
+        }
+
+        class EntryHolder {
+            TextView datumList;
+            TextView teplotaList;
+            ImageView ikonkaList;
+        }
 
     public void vyberIkonky(String enter, ImageView image){
 
