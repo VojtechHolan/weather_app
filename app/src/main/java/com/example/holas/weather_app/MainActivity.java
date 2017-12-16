@@ -16,6 +16,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     Button getWeather, getWeatherLong;
     FloatingActionButton favorite;
@@ -23,6 +29,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Context context = MainActivity.this;
     String whichButton = "";
     public static String data;
+    private String[] parts;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +44,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getWeather.setOnClickListener(this);
         getWeatherLong.setOnClickListener(this);
         favorite.setOnClickListener(this);
+
+
+        /*Plneni tabulky daty*/
+        InputStream is = this.getResources().openRawResource(R.raw.cities);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+
+        ArrayList<String> cityList = new ArrayList<String>();
+
+        try {
+            String line = reader.readLine();
+            while(line != null){
+                cityList.add(line);
+                line = reader.readLine(); // název
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        DatabaseHandler db = new DatabaseHandler(this);
+        db.resetCityTable();
+        for (int i = 0; i < cityList.size(); i++){
+            String line = cityList.get(i);
+            String[] parts = line.split(" ");
+            
+            City mesto = new City(parts[1],parts[2],parts[3]);
+            db.addCity(mesto);
+        }
+
+
+
+        Toast.makeText(this, db.getCity(1).getLat() , Toast.LENGTH_LONG).show();
     }
 
     @Override
