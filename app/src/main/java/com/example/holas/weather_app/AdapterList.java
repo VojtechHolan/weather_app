@@ -125,8 +125,7 @@ public class AdapterList extends ArrayAdapter<Pocasi> {
 
     public String prevodNaC(String teplota){
         double cisloTeplota = Math.floor(Double.parseDouble(teplota) - 273.15);
-        String finTemp = Double.toString(Math.abs(cisloTeplota));
-        return finTemp;
+        return String.valueOf(cisloTeplota);
     }
 
 }

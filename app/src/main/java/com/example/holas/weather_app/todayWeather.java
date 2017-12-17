@@ -1,16 +1,30 @@
 package com.example.holas.weather_app;
 
 import android.content.Intent;
+import android.hardware.SensorListener;
+import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class todayWeather extends AppCompatActivity {
+public class todayWeather extends AppCompatActivity implements View.OnClickListener, SensorListener {
 
     TextView mestoI, datumI,popisI,popisSmallI,tempI, tempMinI, tempMaxI;
     ImageView ikonkaI, ikonkaTemp;
+    String mesto;
+    String datum;
+    String ikonka;
+    String popis;
+    String popisSmall;
+    String temp;
+    String tempMin;
+    String tempMax;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,16 +39,6 @@ public class todayWeather extends AppCompatActivity {
         tempI = (TextView) findViewById(R.id.temp);
         tempMinI = (TextView) findViewById(R.id.tempMin);
         tempMaxI = (TextView) findViewById(R.id.tempMax);
-
-        String mesto;
-        String datum;
-        String ikonka;
-        String popis;
-        String popisSmall;
-        String temp;
-        String tempMin;
-        String tempMax;
-
 
         Intent intent = getIntent();
         String window = intent.getStringExtra("window");
@@ -57,9 +61,24 @@ public class todayWeather extends AppCompatActivity {
         tempMinI.setText(prevodNaC(tempMin));
         tempMaxI.setText(prevodNaC(tempMax));
 
+        Button getGraph;
+        getGraph = (Button)findViewById(R.id.button_canvas);
+        getGraph.setOnClickListener(this);
 
+
+        SensorManager sensorMgr = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensorMgr.registerListener(this,SensorManager.SENSOR_ACCELEROMETER,SensorManager.SENSOR_DELAY_GAME);
+    }
+
+    @Override
+    public void onClick(View view) {
+
+        Intent myIntent = new Intent(this,activity_canvas.class);
+        myIntent.putExtra("temp", prevodNaC(temp));
+        this.startActivity(myIntent);
 
     }
+
 
     public void vyberIkonky(String enter, ImageView image){
 
@@ -123,8 +142,48 @@ public class todayWeather extends AppCompatActivity {
 
     public String prevodNaC(String teplota){
         double cisloTeplota = Math.floor(Double.parseDouble(teplota) - 273.15);
-        String finTemp = Double.toString(Math.abs(cisloTeplota));
-        return finTemp;
+        return String.valueOf(cisloTeplota);
+    }
+
+    private static final int SHAKE_THRESHOLD = 1500;
+    long lastUpdate;
+
+    float x;
+    float y;
+    float z;
+
+    float last_x;
+    float last_y;
+    float last_z;
+
+    public void onSensorChanged(int sensor, float[] values) {
+
+        if (sensor == SensorManager.SENSOR_ACCELEROMETER) {
+            long curTime = System.currentTimeMillis();
+            // only allow one update every 100ms.
+            if ((curTime - lastUpdate) > 100) {
+                long diffTime = (curTime - lastUpdate);
+                lastUpdate = curTime;
+
+                x = values[SensorManager.DATA_X];
+                y = values[SensorManager.DATA_Y];
+                z = values[SensorManager.DATA_Z];
+
+                float speed = Math.abs(x+y+z - last_x - last_y - last_z) / diffTime * 10000;
+
+                if (speed > SHAKE_THRESHOLD) {
+                    Toast.makeText(this, "shake detected w/ speed: " + speed, Toast.LENGTH_SHORT).show();
+                    onBackPressed();
+                }
+                last_x = x;
+                last_y = y;
+                last_z = z;
+            }
+        }
+    }
+    @Override
+    public void onAccuracyChanged(int i, int i1) {
+
     }
 
 }

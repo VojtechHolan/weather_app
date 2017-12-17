@@ -3,6 +3,8 @@
     package="com.example.holas.weather_app">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -20,7 +22,8 @@
         </activity>
         <activity android:name=".todayWeather" />
         <activity android:name=".ListOfDays" />
-        <activity android:name=".myFavorite"></activity>
+        <activity android:name=".myFavorite" />
+        <activity android:name=".activity_canvas"></activity>
     </application>
 
 </manifest>

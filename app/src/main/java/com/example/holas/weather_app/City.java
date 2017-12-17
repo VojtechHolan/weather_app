@@ -6,14 +6,15 @@ package com.example.holas.weather_app;
 
 public class City {
     String name;
-    String lat;
     String lot;
+    String lat;
 
 
-    public City(String name, String lat, String lot){
+
+    public City(String name, String lot, String lat){
         this.name = name;
-        this.lat = lat;
-        this.lot = lot;
+        this.lat = lot;
+        this.lot = lat;
     }
 
 

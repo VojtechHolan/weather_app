@@ -95,4 +95,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return city;
     }
 
+    public int countOfRows() {
+        int count = 0;
+        String sql = "SELECT COUNT(*) FROM " + TABLE_CITY;
+
+        Cursor cursor = getReadableDatabase().rawQuery(sql,null);
+
+        if (cursor.getCount() > 0){
+            cursor.moveToFirst();
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+        // return contact list
+        return count;
+    }
 }
