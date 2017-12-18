@@ -3,6 +3,7 @@ package com.example.holas.weather_app;
 import android.content.Intent;
 import android.hardware.SensorListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -172,7 +173,8 @@ public class todayWeather extends AppCompatActivity implements View.OnClickListe
                 float speed = Math.abs(x+y+z - last_x - last_y - last_z) / diffTime * 10000;
 
                 if (speed > SHAKE_THRESHOLD) {
-                    Toast.makeText(this, "shake detected w/ speed: " + speed, Toast.LENGTH_SHORT).show();
+                    final MediaPlayer mp = MediaPlayer.create(this, R.raw.sound);
+                    mp.start();
                     onBackPressed();
                 }
                 last_x = x;
